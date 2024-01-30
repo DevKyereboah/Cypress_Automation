@@ -23,3 +23,22 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+///<reference types="cypress"/>
+Cypress.command.add('login', ()=>
+{
+    cy.visit('https://amap.amalitech-dev.net/');
+        cy.url().should('eq', 'https://amap.amalitech-dev.net/');
+        cy.wait(3000);
+        cy.get('[id="text"]').should('have.text', 'Assess Smarter Hire Better with AMAP');
+        cy.contains('SIGN IN').click({ force: true });
+
+        cy.fixture('signIn.json').then((data) => {
+            cy.wait(3000);
+            cy.contains('Sign in').should('be.visible');
+            cy.get('[placeholder="Enter email"]').eq(0).type(data.email);
+            cy.get('input[type="password"]').type(data.password);
+            cy.get('[id="custom-button"]').click();
+            cy.url().should('include', '/dashboard/home');
+        });
+}
+)
